@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books API Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="background-animation">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+            <div class="shape shape-6"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1 class="title">BookVault</h1>
+                        <p class="tagline">Your Digital Library Manager</p>
+                    </div>
+                </div>
+                <div class="stats-section">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-books"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="totalBooks">0</span>
+                            <span class="stat-label">Total Books</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-edit"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="totalAuthors">0</span>
+                            <span class="stat-label">Authors</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="totalGenres">0</span>
+                            <span class="stat-label">Genres</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main">
+            <!-- Enhanced Controls Section -->
+            <section class="controls">
+                <div class="search-filters">
+                    <div class="search-box">
+                        <div class="search-input-wrapper">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="searchInput" placeholder="Search books by title, author, or genre..." class="search-input">
+                            <button id="clearSearch" class="clear-search" style="display: none;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <button id="searchBtn" class="search-btn">
+                            <i class="fas fa-search"></i>
+                            Search
+                        </button>
+                    </div>
+                    
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label for="genreFilter">Genre</label>
+                            <select id="genreFilter" class="filter-select">
+                                <option value="all">All Genres</option>
+                                <option value="fiction">Fiction</option>
+                                <option value="dystopian fiction">Dystopian Fiction</option>
+                                <option value="non-fiction">Non-Fiction</option>
+                                <option value="mystery">Mystery</option>
+                                <option value="romance">Romance</option>
+                                <option value="science fiction">Science Fiction</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="sortSelect">Sort By</label>
+                            <select id="sortSelect" class="filter-select">
+                                <option value="">Default</option>
+                                <option value="title">Title A-Z</option>
+                                <option value="author">Author A-Z</option>
+                                <option value="year">Year (Newest)</option>
+                            </select>
+                        </div>
+
+                        <div class="view-toggle">
+                            <button id="gridView" class="view-btn active" title="Grid View">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                            <button id="listView" class="view-btn" title="List View">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button id="exportBtn" class="export-btn">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                    <button id="addBookBtn" class="add-btn">
+                        <i class="fas fa-plus"></i>
+                        Add New Book
+                    </button>
+                </div>
+            </section>
+
+            <!-- Books Section -->
+            <section class="books-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-library"></i>
+                        Book Collection
+                    </h2>
+                    <div class="section-actions">
+                        <span id="bookCount" class="book-count">0 books</span>
+                        <button id="refreshBtn" class="refresh-btn" title="Refresh">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="booksContainer" class="books-container">
+                    <div id="booksGrid" class="books-grid">
+                        <!-- Books will be populated here -->
+                    </div>
+                </div>
+                
+                <div id="loadingState" class="loading-state">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                        <div class="loading-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <p>Loading your library...</p>
+                </div>
+                
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <div class="empty-illustration">
+                        <i class="fas fa-book-reader"></i>
+                    </div>
+                    <h3>Your library is empty</h3>
+                    <p>Start building your digital collection by adding your first book!</p>
+                    <button class="empty-action-btn" onclick="document.getElementById('addBookBtn').click()">
+                        <i class="fas fa-plus"></i>
+                        Add Your First Book
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Enhanced Modal for Add/Edit Book -->
+    <div id="bookModal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title-section">
+                    <div class="modal-icon">
+                        <i class="fas fa-book-plus"></i>
+                    </div>
+                    <h3 id="modalTitle">Add New Book</h3>
+                </div>
+                <button id="closeModal" class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="bookForm" class="book-form">
+                <div class="form-section">
+                    <h4 class="form-section-title">
+                        <i class="fas fa-info-circle"></i>
+                        Basic Information
+                    </h4>
+                    
+                    <div class="form-group">
+                        <label for="title">
+                            <i class="fas fa-heading"></i>
+                            Title *
+                        </label>
+                        <input type="text" id="title" name="title" required placeholder="Enter book title">
+                        <div class="input-feedback"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="author">
+                            <i class="fas fa-user-edit"></i>
+                            Author *
+                        </label>
+                        <input type="text" id="author" name="author" required placeholder="Enter author name">
+                        <div class="input-feedback"></div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="isbn">
+                                <i class="fas fa-barcode"></i>
+                                ISBN *
+                            </label>
+                            <input type="text" id="isbn" name="isbn" required placeholder="978-0-123456-78-9">
+                            <div class="input-feedback"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="publishedYear">
+                                <i class="fas fa-calendar-alt"></i>
+                                Published Year *
+                            </label>
+                            <input type="number" id="publishedYear" name="publishedYear" min="1000" max="2024" required placeholder="2023">
+                            <div class="input-feedback"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="genre">
+                            <i class="fas fa-tags"></i>
+                            Genre *
+                        </label>
+                        <input type="text" id="genre" name="genre" required placeholder="e.g., Fiction, Mystery, Romance" list="genreList">
+                        <datalist id="genreList">
+                            <option value="Fiction">
+                            <option value="Non-Fiction">
+                            <option value="Mystery">
+                            <option value="Romance">
+                            <option value="Science Fiction">
+                            <option value="Fantasy">
+                            <option value="Biography">
+                            <option value="History">
+                        </datalist>
+                        <div class="input-feedback"></div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h4 class="form-section-title">
+                        <i class="fas fa-align-left"></i>
+                        Description
+                    </h4>
+                    
+                    <div class="form-group">
+                        <label for="description">
+                            <i class="fas fa-file-alt"></i>
+                            Book Description
+                        </label>
+                        <textarea id="description" name="description" rows="4" placeholder="Brief description of the book..."></textarea>
+                        <div class="char-counter">
+                            <span id="charCount">0</span>/500 characters
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" id="cancelBtn" class="cancel-btn">
+                        <i class="fas fa-times"></i>
+                        Cancel
+                    </button>
+                    <button type="submit" id="submitBtn" class="submit-btn">
+                        <i class="fas fa-save"></i>
+                        <span class="btn-text">Add Book</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Book Details Modal -->
+    <div id="bookDetailsModal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content book-details-modal">
+            <div class="modal-header">
+                <div class="modal-title-section">
+                    <div class="modal-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3>Book Details</h3>
+                </div>
+                <button id="closeDetailsModal" class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div id="bookDetailsContent" class="book-details-content">
+                <!-- Book details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Confirmation Dialog -->
+    <div id="confirmDialog" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content confirm-dialog">
+            <div class="confirm-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 id="confirmTitle">Confirm Action</h3>
+            <p id="confirmMessage">Are you sure you want to proceed?</p>
+            <div class="confirm-actions">
+                <button id="confirmCancel" class="cancel-btn">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                </button>
+                <button id="confirmOk" class="danger-btn">
+                    <i class="fas fa-trash"></i>
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
